@@ -1,0 +1,25 @@
+{
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": ["standard", "plugin:security/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "security"],
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "off",
+    "space-before-function-paren": "off",
+    "generator-star-spacing": "off",
+    "object-curly-newline": "off",
+    "semi": ["error", "always"],
+    "no-unused-vars": "off",
+    "comma-dangle": "off",
+    "no-console": "error"
+  }
+}
