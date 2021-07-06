@@ -1,3 +1,4 @@
 {
-  "appName": "gree-node"
+  "appName": "gree-node",
+  "debugMode": true
 }

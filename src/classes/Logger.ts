@@ -6,7 +6,9 @@ import config from '../config.json';
 const logDebug = debug(`${config.appName}:log`);
 const errorDebug = debug(`${config.appName}:error`);
 
-debug.enable(`${config.appName}:*`);
+if (config.debugMode) {
+  debug.enable(`${config.appName}:*`);
+}
 
 export default abstract class Logger {
   private constructor() {}

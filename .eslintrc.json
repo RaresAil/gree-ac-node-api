@@ -20,6 +20,7 @@
     "semi": ["error", "always"],
     "no-unused-vars": "off",
     "comma-dangle": "off",
-    "no-console": "off"
+    "no-console": "error",
+    "indent": "off"
   }
 }
