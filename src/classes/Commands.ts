@@ -1,3 +1,5 @@
+import { isDeepStrictEqual } from 'util';
+
 import { Obj, Status, StatusRaw } from '../@types';
 import Crypto from '../utils/Crypto';
 
@@ -68,7 +70,7 @@ const Commands = {
       {
         opt: Object.keys(data),
         p: Object.values(data),
-        t: 'status'
+        t: 'cmd'
       },
       mac,
       key
@@ -84,7 +86,9 @@ export const CommandsOutput: Obj<Obj> = {
       };
     }, {});
   },
-  CMD: ({ r }: { r: number }) => r === 200
+  CMD: ({ opt, p }: any, value: any) =>
+    isDeepStrictEqual(Object.keys(value), opt) &&
+    isDeepStrictEqual(Object.values(value), p)
 };
 
 export default Commands;

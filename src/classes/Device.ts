@@ -115,6 +115,6 @@ export default class Device {
     const parseOutput: any =
       CommandsOutput[command.toString()] ?? ((pack: any) => pack);
 
-    return parseOutput(pack) as Obj<T>;
+    return parseOutput(pack, value) as Obj<T>;
   }
 }
