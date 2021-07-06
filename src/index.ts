@@ -1,10 +1,11 @@
-import Device from './classes/Device';
 import DeviceFinder from './classes/DeviceFinder';
+import Device from './classes/Device';
 import Logger from './classes/Logger';
+import config from './config.json';
 
 export async function waitForDevices(
   address: string,
-  maxDevices: number = 1
+  maxDevices: number = config.stopSearchingAtDevices
 ): Promise<Device[]> {
   let devices: Device[] = [];
 
@@ -23,4 +24,4 @@ export async function waitForDevices(
   return devices;
 }
 
-waitForDevices('192.168.50.255');
+waitForDevices(config.broadcastAddress);

@@ -3,6 +3,7 @@ import RE2 from 're2';
 
 import { DevicePackInfo, FoundDevice } from '../@types';
 import Crypto from '../utils/Crypto';
+import config from '../config.json';
 import { SCAN } from './Commands';
 import Device from './Device';
 import Logger from './Logger';
@@ -18,8 +19,8 @@ export default abstract class DeviceFinder {
 
   public static async scan(
     broadcast: string,
-    maxDevices: number = 1,
-    timeout: number = 30 * 1000
+    maxDevices: number = config.stopSearchingAtDevices,
+    timeout: number = config.searchTimeout * 1000
   ): Promise<Device[]> {
     return lock.acquire<Device[]>('device-scan', async () => {
       const ipCheck = new RE2(
