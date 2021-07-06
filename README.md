@@ -13,6 +13,13 @@ you need to implement the methods.
 
 The `waitForDevices` from index.ts will return an array of devices (by default is set to return only 1), to send commands use `device.sendCommand(...)`.
 
+## Not implemented by default
+
+The following features are not implemented here, but you can manually implement them.
+
+- Scheduling
+- Synchronizing the time on the device
+
 ## Config
 
 In the `src/config.json`, there are the following configurations:
@@ -41,12 +48,24 @@ yarn install
 
 ## Build the App
 
+To build the app, use this command.
+
 ```
 yarn build
 ```
 
-## Run after Build
+After the app is built, copy the dist directory where you want, the dist directory is the production version of the app.
+
+After you place the dist version where ever you want, run the following command to install the deps.
 
 ```
-node bin/index.js
+yarn install
+```
+
+## Run after Build
+
+In the dist folder, run
+
+```
+yarn start
 ```

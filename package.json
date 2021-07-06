@@ -5,7 +5,7 @@
   "repository": "https://github.com/RaresAil/gree-ac-node-api.git",
   "author": "RaresAil <ailincairares1@gmail.com>",
   "scripts": {
-    "build": "yarn lint && rm -rf ./bin/ && tsc -p .",
+    "build": "yarn lint && rm -rf ./dist/ && tsc -p . && node ./scripts/build.js",
     "lint": "eslint src/**/*.ts",
     "dev": "nodemon src/index.ts"
   },

@@ -5,7 +5,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "./bin",
+    "outDir": "./dist",
     "rootDir": "./src",
     "removeComments": true,
     "strict": true,
