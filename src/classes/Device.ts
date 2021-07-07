@@ -9,29 +9,37 @@ import Logger from './Logger';
 type CommandsType = typeof Commands;
 
 export default class Device {
-  private readonly GENERIC_KEY: string = 'a3K8Bx%2r8Y7#xDh';
   private readonly lock: AsyncLock;
 
   private key?: string;
 
-  private pack: DevicePackInfo;
-  private port: number;
-  private ip: string;
+  private pack!: DevicePackInfo;
+  private port!: number;
+  private ip!: string;
 
-  public get Id() {
-    return this.pack.cid;
+  public get Mac() {
+    return this.pack.mac;
   }
 
   public get Name() {
     return this.pack.name ?? '<unknown>';
   }
 
-  public get IsBound() {
-    return !!this.key;
-  }
-
   public constructor(ip: string, port: number, pack: DevicePackInfo) {
     this.lock = new AsyncLock();
+    this.updatePack(ip, port, pack);
+  }
+
+  public compare(ip: string, port: number, pack: DevicePackInfo): boolean {
+    return (
+      ip === this.ip &&
+      port === this.port &&
+      pack.cid === this.pack.cid &&
+      pack.mac === this.pack.mac
+    );
+  }
+
+  public updatePack(ip: string, port: number, pack: DevicePackInfo) {
     this.pack = pack;
     this.port = port;
     this.ip = ip;
@@ -39,11 +47,6 @@ export default class Device {
 
   public async bind(): Promise<void> {
     return this.lock.acquire('device-bind', async () => {
-      if (this.IsBound) {
-        Logger.error(`The device '${this.pack.mac}' was already bound.`);
-        return;
-      }
-
       Logger.log('Binding device:', this.pack.mac);
 
       const command = createRequest(
@@ -94,14 +97,14 @@ export default class Device {
     command: keyof CommandsType,
     value: Partial<Status> = {}
   ): Promise<Obj<T> | null> {
-    if (!this.IsBound) {
+    if (!this.key) {
       Logger.error('This device is not bound!');
       return null;
     }
 
     const parsedCommand = Commands[command.toString() as typeof command](
       this.pack.mac,
-      this.key!,
+      this.key,
       value
     );
 
