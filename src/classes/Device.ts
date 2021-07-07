@@ -31,7 +31,7 @@ export default class Device {
   }
 
   public get Name() {
-    return this.pack.name ?? '<unknown>';
+    return this.pack.name ?? this.pack.mac;
   }
 
   public constructor(ip: string, port: number, pack: DevicePackInfo) {
