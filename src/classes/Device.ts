@@ -1,7 +1,7 @@
 import AsyncLock from 'async-lock';
 
 import Commands, { BIND, createRequest, CommandsOutput } from './Commands';
-import { DevicePackInfo, Obj, Status } from '../@types';
+import { DeviceFullInfo, DevicePackInfo, Obj, Status } from '../@types';
 import Crypto from '../utils/Crypto';
 import Socket from './Socket';
 import Logger from './Logger';
@@ -19,6 +19,15 @@ export default class Device {
 
   public get Mac() {
     return this.pack.mac;
+  }
+
+  public get FullInfo(): DeviceFullInfo {
+    return {
+      mac: this.pack.mac.toString(),
+      id: this.pack.cid.toString(),
+      port: parseInt(this.port.toString()),
+      ip: this.ip.toString()
+    };
   }
 
   public get Name() {

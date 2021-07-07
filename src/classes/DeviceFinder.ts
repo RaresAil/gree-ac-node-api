@@ -3,7 +3,7 @@ import AsyncLock from 'async-lock';
 import dgram from 'dgram';
 import RE2 from 're2';
 
-import { DevicePackInfo, FoundDevice } from '../@types';
+import { DeviceFullInfo, DevicePackInfo, FoundDevice } from '../@types';
 import Crypto from '../utils/Crypto';
 import { SCAN } from './Commands';
 import Device from './Device';
@@ -16,13 +16,20 @@ const lock = new AsyncLock({
 
 const events: {
   deviceFound: 'device-found';
+  deviceUpdated: 'device-updated';
 } = {
-  deviceFound: 'device-found'
+  deviceFound: 'device-found',
+  deviceUpdated: 'device-updated'
 };
 
 type Events = typeof events;
 type ValueOf<T> = T[keyof T];
 type EventNames = ValueOf<Events>;
+
+interface EventParams {
+  'device-found': (device: Device) => void;
+  'device-updated': (oldDeviceInfo: DeviceFullInfo, newDevice: Device) => void;
+}
 
 type ScanReturn<T extends number> = T extends 0 ? void : Device[];
 
@@ -41,9 +48,9 @@ export default abstract class DeviceFinder {
    * @param {function} callback
    * @returns {void}
    */
-  public static on(
-    event: EventNames,
-    callback: (device: Device) => void
+  public static on<T extends EventNames>(
+    event: T,
+    callback: EventParams[T]
   ): void {
     if (!Object.values(events).includes(event)) {
       return;
@@ -140,10 +147,19 @@ export default abstract class DeviceFinder {
 
           if (existingDevice) {
             if (!existingDevice.compare(rinfo.address, rinfo.port, pack)) {
+              const oldInfo = existingDevice.FullInfo;
               existingDevice.updatePack(rinfo.address, rinfo.port, pack);
               await existingDevice.bind();
+              if (this.eventHandler.listenerCount(events.deviceUpdated) === 0) {
+                Logger.warn('No listeners are on device updated');
+              } else {
+                this.eventHandler?.emit(
+                  events.deviceUpdated,
+                  oldInfo,
+                  existingDevice
+                );
+              }
             }
-
             return;
           }
 
