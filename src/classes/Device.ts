@@ -39,12 +39,20 @@ export default class Device {
     );
   }
 
+  /**
+   * This method is used on device discovery, using this might break
+   * the device's communication!!!
+   */
   public updatePack(ip: string, port: number, pack: DevicePackInfo) {
     this.pack = pack;
     this.port = port;
     this.ip = ip;
   }
 
+  /**
+   * This method is used on device discovery, using this might break
+   * the device's communication!!!
+   */
   public async bind(): Promise<void> {
     return this.lock.acquire('device-bind', async () => {
       Logger.log('Binding device:', this.pack.mac);
@@ -93,6 +101,12 @@ export default class Device {
     });
   }
 
+  /**
+   * Use this method to send commands to the device
+   * @param {string} command
+   * @param {any} value
+   * @returns {any | null}
+   */
   public async sendCommand<T = any>(
     command: keyof CommandsType,
     value: Partial<Status> = {}

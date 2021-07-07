@@ -5,7 +5,6 @@ import RE2 from 're2';
 
 import { DevicePackInfo, FoundDevice } from '../@types';
 import Crypto from '../utils/Crypto';
-import config from '../config.json';
 import { SCAN } from './Commands';
 import Device from './Device';
 import Logger from './Logger';
@@ -36,7 +35,16 @@ export default abstract class DeviceFinder {
   private static readonly eventHandler: EventEmitter = new EventEmitter();
   private static foundDevices: Device[] = [];
 
-  public static on(event: EventNames, callback: (device: Device) => void) {
+  /**
+   * Listen to an event. Only available when `maxDevices` is set to `0`
+   * @param {string} event
+   * @param {function} callback
+   * @returns {void}
+   */
+  public static on(
+    event: EventNames,
+    callback: (device: Device) => void
+  ): void {
     if (!Object.values(events).includes(event)) {
       return;
     }
@@ -52,16 +60,18 @@ export default abstract class DeviceFinder {
    * If you don't want that feature, the best option to go is the `waitForDevices` method
    *
    * @param {string} broadcast
-   * @param {number} maxDevices It has to be >= 0
-   * @param {number} timeout (in ms) When to abort when no device was found or
+   * @param {number=} maxDevices It has to be >= 0
+   * @param {number=} timeout (in ms) When to abort when no device was found or
    * if `maxDevices` is set to 0, how often to scan for devices.
    * Minimum is 3 seconds (3000 ms)
+   *
+   * Default is 30s
    * @returns {Device[]}
    */
   public static async scan<T extends number>(
     broadcast: string,
-    maxDevices: T = config.stopSearchingAtDevices as any,
-    timeout: number = config.searchTimeout * 1000
+    maxDevices: T,
+    timeout: number = 30 * 1000
   ): Promise<ScanReturn<T>> {
     if (!this.canScanForMore) {
       return [] as any;

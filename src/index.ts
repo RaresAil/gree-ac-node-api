@@ -1,7 +1,8 @@
 import DeviceFinder from './classes/DeviceFinder';
 import Device from './classes/Device';
 import Logger from './classes/Logger';
-import config from './config.json';
+
+export * from './classes';
 
 /**
  * This method is waiting for at least 1 device to be found.
@@ -17,7 +18,7 @@ import config from './config.json';
  */
 export default async function waitForDevices(
   address: string,
-  maxDevices: number = config.stopSearchingAtDevices
+  maxDevices: number = 1
 ): Promise<Device[]> {
   if (maxDevices === 0) {
     throw new Error(
