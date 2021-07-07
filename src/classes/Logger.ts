@@ -1,14 +1,10 @@
 /* eslint-disable no-useless-constructor */
 import debug from 'debug';
 
-import config from '../config.json';
-
-const logDebug = debug(`${config.appName}:log`);
-const errorDebug = debug(`${config.appName}:error`);
-
-if (config.debugMode) {
-  debug.enable(`${config.appName}:*`);
-}
+const pk = require('../../package.json');
+const logDebug = debug(`${pk.name}:log`);
+const errorDebug = debug(`${pk.name}:error`);
+const warnDebug = debug(`${pk.name}:warn`);
 
 export default abstract class Logger {
   private constructor() {}
@@ -19,5 +15,9 @@ export default abstract class Logger {
 
   public static error(...args: any[]) {
     (errorDebug as any)(...args);
+  }
+
+  public static warn(...args: any[]) {
+    (warnDebug as any)(...args);
   }
 }

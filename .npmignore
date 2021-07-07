@@ -1,0 +1,9 @@
+.github/
+src/
+.eslintignore
+.eslintrc.json
+.gitignore
+README.md
+CHANGELOG.md
+SECURITY.md
+tsconfig.json

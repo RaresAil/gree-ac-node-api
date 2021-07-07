@@ -5,7 +5,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./lib",
     "rootDir": "./src",
     "removeComments": true,
     "strict": true,
@@ -16,5 +16,5 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "exclude": ["node_modules", "bin"]
+  "exclude": ["node_modules", "lib"]
 }

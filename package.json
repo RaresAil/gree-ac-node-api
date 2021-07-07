@@ -1,11 +1,11 @@
 {
-  "name": "gree-ac-node-api",
-  "version": "1.0.0",
-  "main": "bin/index.js",
+  "name": "gree-ac-api",
+  "version": "1.1.0",
+  "main": "lib/index.js",
   "repository": "https://github.com/RaresAil/gree-ac-node-api.git",
   "author": "RaresAil <ailincairares1@gmail.com>",
   "scripts": {
-    "build": "yarn lint && rm -rf ./dist/ && tsc -p . && node ./scripts/build.js",
+    "build": "yarn lint && rm -rf ./lib/ && tsc -p .",
     "lint": "eslint src/**/*.ts",
     "dev": "nodemon src/index.ts"
   },

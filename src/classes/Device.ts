@@ -1,7 +1,7 @@
 import AsyncLock from 'async-lock';
 
 import Commands, { BIND, createRequest, CommandsOutput } from './Commands';
-import { DevicePackInfo, Obj, Status } from '../@types';
+import { DeviceFullInfo, DevicePackInfo, Obj, Status } from '../@types';
 import Crypto from '../utils/Crypto';
 import Socket from './Socket';
 import Logger from './Logger';
@@ -9,41 +9,61 @@ import Logger from './Logger';
 type CommandsType = typeof Commands;
 
 export default class Device {
-  private readonly GENERIC_KEY: string = 'a3K8Bx%2r8Y7#xDh';
   private readonly lock: AsyncLock;
 
   private key?: string;
 
-  private pack: DevicePackInfo;
-  private port: number;
-  private ip: string;
+  private pack!: DevicePackInfo;
+  private port!: number;
+  private ip!: string;
 
-  public get Id() {
-    return this.pack.cid;
+  public get Mac() {
+    return this.pack.mac;
+  }
+
+  public get FullInfo(): DeviceFullInfo {
+    return {
+      mac: this.pack.mac.toString(),
+      id: this.pack.cid.toString(),
+      port: parseInt(this.port.toString()),
+      ip: this.ip.toString()
+    };
   }
 
   public get Name() {
-    return this.pack.name ?? '<unknown>';
-  }
-
-  public get IsBound() {
-    return !!this.key;
+    return this.pack.name ?? this.pack.mac;
   }
 
   public constructor(ip: string, port: number, pack: DevicePackInfo) {
     this.lock = new AsyncLock();
+    this.updatePack(ip, port, pack);
+  }
+
+  public compare(ip: string, port: number, pack: DevicePackInfo): boolean {
+    return (
+      ip === this.ip &&
+      port === this.port &&
+      pack.cid === this.pack.cid &&
+      pack.mac === this.pack.mac
+    );
+  }
+
+  /**
+   * This method is used on device discovery, using this might break
+   * the device's communication!!!
+   */
+  public updatePack(ip: string, port: number, pack: DevicePackInfo) {
     this.pack = pack;
     this.port = port;
     this.ip = ip;
   }
 
+  /**
+   * This method is used on device discovery, using this might break
+   * the device's communication!!!
+   */
   public async bind(): Promise<void> {
     return this.lock.acquire('device-bind', async () => {
-      if (this.IsBound) {
-        Logger.error(`The device '${this.pack.mac}' was already bound.`);
-        return;
-      }
-
       Logger.log('Binding device:', this.pack.mac);
 
       const command = createRequest(
@@ -90,18 +110,24 @@ export default class Device {
     });
   }
 
+  /**
+   * Use this method to send commands to the device
+   * @param {string} command
+   * @param {any} value
+   * @returns {any | null}
+   */
   public async sendCommand<T = any>(
     command: keyof CommandsType,
     value: Partial<Status> = {}
   ): Promise<Obj<T> | null> {
-    if (!this.IsBound) {
+    if (!this.key) {
       Logger.error('This device is not bound!');
       return null;
     }
 
     const parsedCommand = Commands[command.toString() as typeof command](
       this.pack.mac,
-      this.key!,
+      this.key,
       value
     );
 

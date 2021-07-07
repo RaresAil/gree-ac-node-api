@@ -1,7 +1,0 @@
-{
-  "appName": "gree-node",
-  "debugMode": true,
-  "broadcastAddress": "192.168.50.255",
-  "searchTimeout": 30,
-  "stopSearchingAtDevices": 1
-}
