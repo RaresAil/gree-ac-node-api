@@ -1,6 +1,6 @@
 {
   "name": "gree-ac-api",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "lib/index.js",
   "repository": "https://github.com/RaresAil/gree-ac-node-api.git",
   "author": "RaresAil <ailincairares1@gmail.com>",
