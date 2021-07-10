@@ -1,7 +1,6 @@
 import { EventEmitter } from 'stream';
 import AsyncLock from 'async-lock';
 import dgram from 'dgram';
-import RE2 from 're2';
 
 import { DeviceFullInfo, DevicePackInfo, FoundDevice } from '../@types';
 import Crypto from '../utils/Crypto';
@@ -84,9 +83,8 @@ export default abstract class DeviceFinder {
       return [] as any;
     }
 
-    const ipCheck = new RE2(
-      /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
-    );
+    const ipCheck =
+      /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
 
     if (!broadcast || !ipCheck.test(broadcast)) {
       throw new Error('Invalid broadcast address.');
